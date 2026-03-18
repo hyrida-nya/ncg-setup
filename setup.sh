@@ -33,28 +33,17 @@ echo "🐾 Starting NCG Chat setup in $(pwd)..."
 # 1. Dependency Check
 if ! command -v node &> /dev/null || ! command -v npm &> /dev/null; then
     echo "🐾 Node.js or npm not found. Installing Node.js via NodeSource..."
-    # Install Node.js LTS via NodeSource
     curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
     sudo apt-get install -y nodejs
     echo "✅ Node.js and npm installed."
 fi
 
-# Ensure PM2 is installed globally
-if ! command -v pm2 &> /dev/null; then
-    echo "🐾 Installing PM2 globally..."
-    npm install -g pm2
-fi
+# 2. Install Dependencies (including PM2 locally to avoid permission issues)
+echo "🐾 Installing dependencies and PM2 locally..."
+npm install
+npm install pm2
 
-echo "✅ Node.js, npm, and PM2 found."
-
-# 2. Install Dependencies
-if [ -f "package.json" ]; then
-    echo "🐾 Installing dependencies..."
-    npm install
-else
-    echo "❌ package.json not found. Something went wrong with the clone."
-    exit 1
-fi
+echo "✅ Dependencies and PM2 installed."
 
 # 3. Environment Config
 if [ ! -f .env ]; then
@@ -91,4 +80,4 @@ fi
 
 # 6. Verification
 echo "🐾 Setup purr-fect! You are ready to start the server."
-echo "🐾 Run with: pm2 start ecosystem.config.js"
+echo "🐾 Run with: ./node_modules/.bin/pm2 start ecosystem.config.js"
