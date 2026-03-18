@@ -4,15 +4,16 @@
 
 set -euo pipefail
 
-# Check and install git if missing
-if ! command -v git &> /dev/null; then
-    echo "🐾 Git not found. Attempting to install git..."
+# Check and install git and build tools if missing
+if ! command -v git &> /dev/null || ! command -v g++ &> /dev/null; then
+    echo "🐾 Git or build tools not found. Attempting to install..."
     if command -v apt-get &> /dev/null; then
-        sudo apt-get update && sudo apt-get install -y git
+        sudo apt-get update && sudo apt-get install -y git build-essential
     elif command -v yum &> /dev/null; then
+        sudo yum groupinstall -y "Development Tools"
         sudo yum install -y git
     else
-        echo "❌ Git not found and could not automatically install. Please install git manually (e.g., 'sudo apt install git' or 'sudo yum install git')."
+        echo "❌ Build tools not found and could not automatically install."
         exit 1
     fi
 fi
@@ -42,8 +43,11 @@ fi
 echo "🐾 Installing dependencies and PM2 locally..."
 npm install
 npm install pm2
-# Force rebuild sqlite3 from source to avoid glibc compatibility issues
-npm rebuild sqlite3 --build-from-source
+
+# Force fresh build of sqlite3 from source to fix GLIBC error
+echo "🐾 Rebuilding sqlite3 from source..."
+rm -rf node_modules/sqlite3
+npm install sqlite3 --build-from-source
 
 echo "✅ Dependencies, PM2, and sqlite3 installed."
 
