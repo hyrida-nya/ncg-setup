@@ -4,15 +4,23 @@
 
 set -euo pipefail
 
+# Check and install git if missing
+if ! command -v git &> /dev/null; then
+    echo "🐾 Git not found. Attempting to install git..."
+    if command -v apt-get &> /dev/null; then
+        sudo apt-get update && sudo apt-get install -y git
+    elif command -v yum &> /dev/null; then
+        sudo yum install -y git
+    else
+        echo "❌ Git not found and could not automatically install. Please install git manually (e.g., 'sudo apt install git' or 'sudo yum install git')."
+        exit 1
+    fi
+fi
+
 # Clone repository if it doesn't exist
 if [ ! -d "ncg" ]; then
     echo "🐾 Cloning NCG repository (shallow) to ./ncg..."
-    if command -v git &> /dev/null; then
-        git clone --depth 1 https://github.com/hyrida-nya/ncg.git ncg
-    else
-        echo "❌ Git not found. Please install git."
-        exit 1
-    fi
+    git clone --depth 1 https://github.com/hyrida-nya/ncg.git ncg
 else
     echo "ℹ️ ./ncg already exists. Skipping clone."
 fi
@@ -24,17 +32,11 @@ echo "🐾 Starting NCG Chat setup in $(pwd)..."
 
 # 1. Dependency Check
 if ! command -v node &> /dev/null || ! command -v npm &> /dev/null; then
-    echo "🐾 Node.js or npm not found. Installing NVM and Node.js..."
-    # Install NVM
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
-    # Load NVM (this works in the current shell session)
-    export NVM_DIR="$HOME/.nvm"
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-    
-    # Install Node.js LTS
-    nvm install --lts
-    nvm use --lts
-    echo "✅ Node.js and npm installed via NVM."
+    echo "🐾 Node.js or npm not found. Installing Node.js via NodeSource..."
+    # Install Node.js LTS via NodeSource
+    curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+    sudo apt-get install -y nodejs
+    echo "✅ Node.js and npm installed."
 fi
 
 # Ensure PM2 is installed globally
