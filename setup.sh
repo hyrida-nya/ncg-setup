@@ -42,8 +42,10 @@ fi
 echo "🐾 Installing dependencies and PM2 locally..."
 npm install
 npm install pm2
+# Force rebuild sqlite3 from source to avoid glibc compatibility issues
+npm rebuild sqlite3 --build-from-source
 
-echo "✅ Dependencies and PM2 installed."
+echo "✅ Dependencies, PM2, and sqlite3 installed."
 
 # 3. Environment Config
 if [ ! -f .env ]; then
