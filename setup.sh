@@ -38,7 +38,7 @@ if ! command -v node &> /dev/null || ! command -v npm &> /dev/null; then
     echo "✅ Node.js and npm installed."
 fi
 
-# 2. Install Dependencies (including PM2 locally to avoid permission issues)
+# 2. Install Dependencies
 echo "🐾 Installing dependencies and PM2 locally..."
 npm install
 npm install pm2
