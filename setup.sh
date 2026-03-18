@@ -31,12 +31,12 @@ cd ncg
 
 echo "🐾 Starting NCG Chat setup in $(pwd)..."
 
-# 1. Dependency Check
+# 1. Dependency Check - Force Node v20 LTS (more compatible with older systems)
 if ! command -v node &> /dev/null || ! command -v npm &> /dev/null; then
-    echo "🐾 Node.js or npm not found. Installing Node.js via NodeSource..."
-    curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+    echo "🐾 Node.js or npm not found. Installing Node.js (v20) via NodeSource..."
+    curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
     sudo apt-get install -y nodejs
-    echo "✅ Node.js and npm installed."
+    echo "✅ Node.js v20 and npm installed."
 fi
 
 # 2. Install Dependencies
