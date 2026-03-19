@@ -8,18 +8,12 @@ Master's Butler Setup Script for NCG.
 To install NCG from scratch:
 
 ```bash
-chmod +x setup.sh
-./setup.sh install
-cd ncg
-./node_modules/.bin/pm2 start ecosystem.config.js
+curl -sSL https://raw.githubusercontent.com/hyrida-nya/ncg-setup/main/setup.sh | bash -s -- install
 ```
 
 ### Update
 To pull the latest changes and update dependencies:
 
 ```bash
-chmod +x setup.sh
-./setup.sh update
-cd ncg
-./node_modules/.bin/pm2 restart ecosystem.config.js
+curl -sSL https://raw.githubusercontent.com/hyrida-nya/ncg-setup/main/setup.sh | bash -s -- update
 ```
